@@ -6,8 +6,8 @@ import java.sql.Connection;
 import java.util.Scanner;
 
 public class Admin extends UniversityPerson{
-    String username;
-    String password;
+//    String username;
+//    String password;
     private boolean loginState=false;
     Scanner scn=new Scanner(System.in);
 
@@ -19,6 +19,7 @@ public class Admin extends UniversityPerson{
         String username= scn.next();
         System.out.print("Enter Password: ");
         String password=scn.next();
+
         Connection connection= sqlConnection.sqlConnector();
        try{
            Statement st=connection.createStatement();

@@ -1,6 +1,5 @@
 package main;
 
-
 import controlls.DBConnect;
 
 public abstract class UniversityPerson implements Action{
