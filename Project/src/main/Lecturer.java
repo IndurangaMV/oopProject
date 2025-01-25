@@ -159,7 +159,6 @@ public class Lecturer extends UniversityPerson {
     public static void main(String[] args) {
         Lecturer lect= new Lecturer();
         lect.login();
-
     }
 
 }
