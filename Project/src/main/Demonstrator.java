@@ -1,11 +1,13 @@
 package main;
 import java.util.Scanner;
-import controlls.DBConnectDemo;
+import controlls.DBConnectAdmin;
+import controlls.DBConnect;
+import controlls.DBConnectDemonstrator;
 
 public class Demonstrator extends UniversityPerson {
     private boolean loginState = false;
     Scanner scn = new Scanner(System.in);
-    DBConnectDemo dbc = new DBConnectDemo(); // Using DBConnectAdmin for database actions
+    DBConnectDemonstrator dbcd = new DBConnectDemonstrator(); // Using DBConnectAdmin for database actions
 
     @Override
     public void login() {
@@ -15,7 +17,7 @@ public class Demonstrator extends UniversityPerson {
         String username = scn.next();
         System.out.print("Enter Password: ");
         String password = scn.next();
-        loginState = dbc.login(username, password); // Use the login method from DBConnectAdmin
+        loginState = dbcd.login(username, password); // Use the login method from DBConnectAdmin
         if (loginState) {
             this.username = username;
             this.password = password;
@@ -72,7 +74,7 @@ public class Demonstrator extends UniversityPerson {
             System.out.print("Enter Date (yyyy-mm-dd): ");
             String date = scn.next();
 
-            boolean attendanceMarked = dbc.markStudentAttendance(studentId, courseId, date);
+            boolean attendanceMarked = dbcd.markStudentAttendance(studentId, courseId, date);
             if (attendanceMarked) {
                 System.out.println("Attendance marked successfully.");
             } else {
@@ -95,7 +97,7 @@ public class Demonstrator extends UniversityPerson {
             scn.nextLine();  // Consume newline left over from nextInt()
             String message = scn.nextLine();
 
-            boolean messageSent = dbc.sendMessageToStudent(studentId, message);
+            boolean messageSent = dbcd.sendMessageToStudent(studentId, message);
             if (messageSent) {
                 System.out.println("Message sent successfully.");
             } else {
@@ -118,7 +120,7 @@ public class Demonstrator extends UniversityPerson {
             scn.nextLine();  // Consume newline left over from nextInt()
             String message = scn.nextLine();
 
-            boolean messageSent = dbc.sendMessageToLecturer(lecturerId, message);
+            boolean messageSent = dbcd.sendMessageToLecturer(lecturerId, message);
             if (messageSent) {
                 System.out.println("Message sent successfully.");
             } else {
