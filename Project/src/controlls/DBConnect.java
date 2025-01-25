@@ -242,6 +242,67 @@ public abstract class DBConnect {
         return lpList;
     }
 
+    public int getMsgNotifications(String username){
+        Connection connection=sqlConnector();
+        int notifications =0;
+        try{
+            Statement st = connection.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY
+            );
+            ResultSet rs=st.executeQuery("SELECT * FROM message WHERE `to`='"+username+"' AND `viewStt`='0'");
+            while(rs.next()){
+                notifications++;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return notifications;
+    }
+
+    public String[][] getMessages(String username){
+        String[][] MessagesSet=null;
+        int msgIndex=0;
+        Connection connection=sqlConnector();
+        try{
+            Statement st = connection.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY
+            );
+            ResultSet rs=st.executeQuery("SELECT * FROM message WHERE `to`='"+username+"' AND `viewStt`='0'");
+            rs.last();
+            int n=rs.getRow();
+            MessagesSet=new String[n][3];
+            rs.beforeFirst();
+            while(rs.next()){
+                MessagesSet[msgIndex][0]=rs.getString("from");
+                MessagesSet[msgIndex][1]=rs.getString("text");
+                MessagesSet[msgIndex][2]=rs.getString("dateTime");
+                msgIndex++;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return MessagesSet;
+    }
+    public void setViewStt(String username){
+        Connection connection=sqlConnector();
+        try (PreparedStatement ps = connection.prepareStatement("UPDATE message SET `viewStt`=? WHERE `to`=? AND `viewStt`=? ")) {
+            ps.setInt(1, 1);
+            ps.setString(2, username);
+            ps.setInt(3,0);
+
+            int rowsInserted = ps.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("Your messages have been saved as read.");
+            }else{
+                System.out.println("There are no unread messages.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean sendMessage(int type,String username,String from){
         Connection connection=sqlConnector();
         boolean msgStt =false;
@@ -251,7 +312,7 @@ public abstract class DBConnect {
             break;
             case 2:query="SELECT * FROM lecturer WHERE `lecturer_id`='"+username+"'";
             break;
-            case 3:query="SELECT * AS user FROM demonstrator WHERE `demonstrator_id`='"+username+"'";
+            case 3:query="SELECT * FROM demonstrator WHERE `demonstrator_id`='"+username+"'";
             break;
         }
 
@@ -288,3 +349,4 @@ public abstract class DBConnect {
         return msgStt;
     }
 }
+

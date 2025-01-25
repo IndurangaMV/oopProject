@@ -21,46 +21,6 @@ public class DBConnectDemonstrator extends DBConnect{
         }
         return loginStatus;
     }
-    public boolean sendMessageToLecturer(String lecturerId, String message) {
-        Connection connection = sqlConnector();
-        try (PreparedStatement ps = connection.prepareStatement(
-                "INSERT INTO messages (recipient_id, message, sender_role) VALUES (?, ?, 'Demonstrator')")) {
-            ps.setString(1, lecturerId);
-            ps.setString(2, message);
-
-            int rowsInserted = ps.executeUpdate();
-            if (rowsInserted > 0) {
-                System.out.println("Message sent to Lecturer ID: " + lecturerId);
-                return true;
-            } else {
-                System.out.println("Failed to send message to lecturer.");
-                return false;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-    public boolean sendMessageToStudent(String studentId, String message) {
-        Connection connection = sqlConnector();
-        try (PreparedStatement ps = connection.prepareStatement(
-                "INSERT INTO messages (recipient_id, message, sender_role) VALUES (?, ?, 'Demonstrator')")) {
-            ps.setString(1, studentId);
-            ps.setString(2, message);
-
-            int rowsInserted = ps.executeUpdate();
-            if (rowsInserted > 0) {
-                System.out.println("Message sent to Student ID: " + studentId);
-                return true;
-            } else {
-                System.out.println("Failed to send message to student.");
-                return false;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
     public boolean markStudentAttendance(String studentId, String courseId, String date) {
         Connection connection = sqlConnector();
         try (PreparedStatement ps = connection.prepareStatement(

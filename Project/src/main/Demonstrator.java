@@ -29,11 +29,12 @@ public class Demonstrator extends UniversityPerson {
     private void demonstratorDashboard() {
         if (loginState) {
             System.out.println("-----------------------------");
-            System.out.println("Demonstrator Dashboard");
+            System.out.println("Demonstrator Dashboard\t\tYou have "+dbc.getMsgNotifications(username)+" Messages");
             System.out.println("-----------------------------");
             System.out.println("01. Mark Attendance.");
-            System.out.println("02. Send Message to Student.");
-            System.out.println("03. Sign Out.");
+            System.out.println("02. Send Message.");
+            System.out.println("03. View Messages.");
+            System.out.println("04. Sign Out.");
             System.out.print("\nPlease enter the task number: ");
             int task = scn.nextInt();
             switch (task) {
@@ -44,6 +45,9 @@ public class Demonstrator extends UniversityPerson {
                     sendMessage();
                     break;
                 case 3:
+                    viewMessages();
+                    break;
+                case 4:
                     signOut();
                     break;
                 default:
@@ -114,6 +118,18 @@ public class Demonstrator extends UniversityPerson {
             System.out.println("You must log in first.");
             login();
         }
+    }
+    private void viewMessages(){
+        String[][] messages=dbc.getMessages(username);
+        for(String[] x: messages){
+                System.out.println("\nFrom: "+x[0]+"\t\tDate & Time: "+x[2]);
+                System.out.println(x[1]);
+        }
+        markAsRead();
+        demonstratorDashboard();
+    }
+    private void markAsRead(){
+dbc.setViewStt(username);
     }
 
     @Override
