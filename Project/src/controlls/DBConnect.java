@@ -120,6 +120,26 @@ public abstract class DBConnect {
         }
         return lpID;
     }
+    public int getLectureHallId(){
+        Connection connection=sqlConnector();
+        int lhID =0;
+        try{
+            Statement st = connection.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY
+            );
+            ResultSet rs=st.executeQuery("SELECT * FROM lecture_hall");
+            System.out.println("Select The Hall for Lecture: (enter the number)");
+            while(rs.next()){
+                System.out.println("\t"+rs.getString("id")+": "+rs.getString("hall_name"));
+            }
+            System.out.print("Enter Hall Number: ");
+            lhID =scn.nextInt();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return lhID;
+    }
 
     public String[][] getFacultyList(){
         Connection connection=sqlConnector();

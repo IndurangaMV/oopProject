@@ -27,7 +27,7 @@ public class Lecturer extends UniversityPerson {
             login();
         }
     }
-    void LectureDashboard(){
+    private void LectureDashboard(){
         if(loginState){
             System.out.println("----------------------------------------------------------");
             System.out.println("Lecturer Dashboard\t\tYou have "+dbc.getMsgNotifications(username)+" Messages");
@@ -35,7 +35,8 @@ public class Lecturer extends UniversityPerson {
             System.out.println("1. Get students attendance");
             System.out.println("2. Lecture Schedule");
             System.out.println("3. Send message to demonstrator");
-            System.out.println("4. Sign out");
+            System.out.println("4. Add new Lecture");
+            System.out.println("5. Sign out");
             System.out.println("Enter the number of task:");
             int task=scn.nextInt();
 
@@ -50,6 +51,9 @@ public class Lecturer extends UniversityPerson {
                     SendMessageToDemo();
                     break;
                 case 4:
+                    sheduleNewLecture();
+                    break;
+                case 5:
                     signOut();
                     break;
                 default:
@@ -62,16 +66,7 @@ public class Lecturer extends UniversityPerson {
         }
 
     }
-    void lectureMaterial(){
-        if(loginState){
-
-        }
-        else {
-            System.out.println("You have to login first");
-        }
-
-    }
-    void getStudentAttendance(){
+    private void getStudentAttendance(){
         if(loginState){
             System.out.println("1. Search by Student.");
             System.out.println("2. Search by course code.");
@@ -96,7 +91,7 @@ public class Lecturer extends UniversityPerson {
         }
 
     }
-    void searchStudent() {
+    private void searchStudent() {
         if (loginState) {
             System.out.println("Enter Student Id:");
             String stID=scn.nextLine();
@@ -105,7 +100,7 @@ public class Lecturer extends UniversityPerson {
             System.out.println("You have to login first.");
         }
     }
-    void searchSourceCode(){
+    private void searchSourceCode(){
         if(loginState){
             System.out.println("Enter the Source code:");
             String SourceCode=scn.nextLine();
@@ -114,7 +109,7 @@ public class Lecturer extends UniversityPerson {
             System.out.println("You have to login first");
         }
     }
-    void searchDate(){
+    private void searchDate(){
         if(loginState){
             System.out.println("Enter the date:");
             String date=scn.nextLine();
@@ -123,7 +118,7 @@ public class Lecturer extends UniversityPerson {
             System.out.println("You have to login first.");
         }
     }
-    void AboutLecture(){
+    private void AboutLecture(){
         if(loginState){
 
     }
@@ -132,13 +127,28 @@ public class Lecturer extends UniversityPerson {
         }
 
     }
-    void SendMessageToDemo() {
+    private void SendMessageToDemo() {
         if(loginState){
 
         }
         else {
             System.out.println("You have to login first");
         }
+    }
+    private void sheduleNewLecture(){
+        String modID=dbc.getModuleID(username);
+        int hall= dbc.getLectureHallId();
+        System.out.println("Enter title for Lecture:");
+        String title=scn.nextLine();
+        System.out.println("Enter Date: (format: yyyy-mm-dd)");
+        String date=scn.nextLine();
+        System.out.println("Time from(hh:mm:ss): ");
+        String from=scn.nextLine();
+        System.out.println("Time to(hh:mm:ss): ");
+        String to=scn.nextLine();
+        int lecId=dbc.addLecture(modID,title,date,from,to,hall);
+        dbc.attendanceSheet(lecId);
+        LectureDashboard();
     }
 
 
