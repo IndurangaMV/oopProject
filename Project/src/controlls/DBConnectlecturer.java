@@ -111,6 +111,64 @@ public class DBConnectlecturer extends DBConnect{
             System.out.println(e);
         }
     }
+    public String[][] seeLectureShedule(String from,String to,String username){
+        String[][] lecList=null;
+        Connection connection=sqlConnector();
+        try{
+            Statement st = connection.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY
+            );
+            ResultSet rs_id=st.executeQuery("SELECT id FROM lecturer WHERE lecturer_id='"+username+"'");
+            rs_id.next();
+            ResultSet rs=st.executeQuery("SELECT * FROM lecture WHERE module_module_id \n" +
+                    "IN(SELECT cause_code FROM module WHERE lecturer_id='"+rs_id.getInt("id")+"') AND `date` BETWEEN '"+from+"' AND '"+to+"';");
+            rs.last();
+            int n=rs.getRow();
+            rs.beforeFirst();
+            lecList=new String[n][6];
+            int i=0;
+            while (rs.next()){
+                lecList[i][0]=rs.getString("title");
+                lecList[i][1]=rs.getString("module_module_id");
+                lecList[i][2]=rs.getString("date");
+                lecList[i][3]=rs.getString("time_from");
+                lecList[i][4]=rs.getString("time_to");
+                lecList[i][5]=rs.getString("id");
+                i++;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return lecList;
+    }
+    public String[][] seeStudentAtt(int lecID){
+        Connection connection=sqlConnector();
+        String[][] stuList=null;
+        try{
+            Statement st = connection.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY
+            );
+            ResultSet rs=st.executeQuery("SELECT student.studentNumber,student.`name`,student_has_lecture.present\n" +
+                    "FROM student_has_lecture LEFT JOIN student ON student_has_lecture.student_id=student.id\n" +
+                    "WHERE student_has_lecture.lecture_id='"+lecID+"'");
+            rs.last();
+            int n=rs.getRow();
+            rs.beforeFirst();
+            stuList=new String[n][3];
+            int i=0;
+            while(rs.next()){
+                stuList[i][0]=rs.getString("studentNumber");
+                stuList[i][1]=rs.getString("name");
+                stuList[i][2]=rs.getString("present");
+                i++;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return stuList;
+    }
 }
 
 

@@ -68,28 +68,24 @@ public class Lecturer extends UniversityPerson {
     }
     private void getStudentAttendance(){
         if(loginState){
-            System.out.println("1. Search by Student.");
-            System.out.println("2. Search by course code.");
-            System.out.println("3. search by date.");
-            System.out.println("please enter the task:");
-            int task2=scn.nextInt();
-            switch (task2){
-                case 1:
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    break;
-                default:
-                    System.out.println("Please enter correct task.");
-                    break;
+            String from="2025-01-01"; //add start date of current month
+            String to="2025-01-31";//add end date of current month
+            String[][] lecList= dbc.seeLectureShedule(from,to,username);
+            for(int x=0;x<lecList.length;x++){
+                System.out.println("Index:"+x+"\t"+lecList[x][1]+"\t"+lecList[x][2]+"\t"+lecList[x][3]+"\t"+lecList[x][4]+"\t"+lecList[x][0]);
+            }
+            System.out.println("Enter Index:");
+            int i=scn.nextInt();
+            String[][] studentList= dbc.seeStudentAtt(Integer.parseInt(lecList[i][5]));
+            for(int n=0;n<studentList.length;n++){
+                System.out.println(studentList[n][0]+"\t"+studentList[n][1]+"\t"+studentList[n][2]);
             }
 
         }
         else {
             System.out.println("You have to login first");
         }
-
+        LectureDashboard();
     }
     private void searchStudent() {
         if (loginState) {
@@ -120,12 +116,17 @@ public class Lecturer extends UniversityPerson {
     }
     private void AboutLecture(){
         if(loginState){
-
+            String from="2025-01-15";
+            String to="2025-04-10";
+            String[][] lecList= dbc.seeLectureShedule(from,to,username);
+            for(String[] x:lecList){
+                System.out.println(x[0]+"\t"+x[1]+"\t"+x[2]+"\t"+x[3]+"\t"+x[4]);
+            }
     }
         else {
             System.out.println("You have to login first");
         }
-
+        LectureDashboard();
     }
     private void SendMessageToDemo() {
         if(loginState){
@@ -170,5 +171,4 @@ public class Lecturer extends UniversityPerson {
         Lecturer lect= new Lecturer();
         lect.login();
     }
-
 }
