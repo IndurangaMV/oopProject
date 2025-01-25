@@ -1,10 +1,8 @@
 package controlls;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Scanner;
-import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 public abstract class DBConnect {
@@ -242,5 +240,51 @@ public abstract class DBConnect {
             System.out.println(e);
         }
         return lpList;
+    }
+
+    public boolean sendMessage(int type,String username,String from){
+        Connection connection=sqlConnector();
+        boolean msgStt =false;
+        String query="";
+        switch (type){
+            case 1:query="SELECT * FROM student WHERE `studentNumber`='"+username+"'";
+            break;
+            case 2:query="SELECT * FROM lecturer WHERE `lecturer_id`='"+username+"'";
+            break;
+            case 3:query="SELECT * AS user FROM demonstrator WHERE `demonstrator_id`='"+username+"'";
+            break;
+        }
+
+        try{
+            Statement st = connection.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY
+            );
+            ResultSet rs=st.executeQuery(query);
+            if(rs.next()){
+                System.out.println("Enter the message:");
+                String text=scn.nextLine();
+                DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                String datetime=LocalDateTime.now().format(dtf);
+                try (PreparedStatement ps = connection.prepareStatement("INSERT INTO message(`from`,`to`,`text`,`dateTime`,`viewStt`) VALUES(?,?,?,?,?)")) {
+                    ps.setString(1, from);
+                    ps.setString(2, username);
+                    ps.setString(3,text);
+                    ps.setString(4, datetime);
+                    ps.setInt(5,0);
+                    int stt=ps.executeUpdate();
+                    if(stt>0){
+                        msgStt=true;
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                System.out.println("There is no user with this username. please Try again");
+            }//
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return msgStt;
     }
 }

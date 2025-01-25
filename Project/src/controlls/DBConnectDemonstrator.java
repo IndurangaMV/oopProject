@@ -11,7 +11,7 @@ public class DBConnectDemonstrator extends DBConnect{
             ResultSet rs = st.executeQuery("SELECT * FROM demonstrator");
 
             while (rs.next()) {
-                if (rs.getString("demonstrator_id").equals(username) && rs.getString("contact_no").equals(password)) {
+                if (rs.getString("demonstrator_id").equals(username) && rs.getString("password").equals(password)) {
                     loginStatus = true;  // If login successful
                     break;  // Exit the loop as soon as match is found
                 }

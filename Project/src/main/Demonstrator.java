@@ -1,13 +1,10 @@
 package main;
-import java.util.Scanner;
-import controlls.DBConnectAdmin;
-import controlls.DBConnect;
 import controlls.DBConnectDemonstrator;
+
 
 public class Demonstrator extends UniversityPerson {
     private boolean loginState = false;
-    Scanner scn = new Scanner(System.in);
-    DBConnectDemonstrator dbcd = new DBConnectDemonstrator(); // Using DBConnectAdmin for database actions
+    DBConnectDemonstrator dbc = new DBConnectDemonstrator(); // Using DBConnectAdmin for database actions
 
     @Override
     public void login() {
@@ -17,7 +14,7 @@ public class Demonstrator extends UniversityPerson {
         String username = scn.next();
         System.out.print("Enter Password: ");
         String password = scn.next();
-        loginState = dbcd.login(username, password); // Use the login method from DBConnectAdmin
+        loginState = dbc.login(username, password); // Use the login method from DBConnectAdmin
         if (loginState) {
             this.username = username;
             this.password = password;
@@ -36,8 +33,7 @@ public class Demonstrator extends UniversityPerson {
             System.out.println("-----------------------------");
             System.out.println("01. Mark Attendance.");
             System.out.println("02. Send Message to Student.");
-            System.out.println("03. Send Message to Lecturer.");
-            System.out.println("04. Sign Out.");
+            System.out.println("03. Sign Out.");
             System.out.print("\nPlease enter the task number: ");
             int task = scn.nextInt();
             switch (task) {
@@ -45,12 +41,9 @@ public class Demonstrator extends UniversityPerson {
                     markAttendance();
                     break;
                 case 2:
-                    sendMessageToStudent();
+                    sendMessage();
                     break;
                 case 3:
-                    sendMessageToLecturer();
-                    break;
-                case 4:
                     signOut();
                     break;
                 default:
@@ -74,7 +67,7 @@ public class Demonstrator extends UniversityPerson {
             System.out.print("Enter Date (yyyy-mm-dd): ");
             String date = scn.next();
 
-            boolean attendanceMarked = dbcd.markStudentAttendance(studentId, courseId, date);
+            boolean attendanceMarked = dbc.markStudentAttendance(studentId, courseId, date);
             if (attendanceMarked) {
                 System.out.println("Attendance marked successfully.");
             } else {
@@ -88,45 +81,35 @@ public class Demonstrator extends UniversityPerson {
     }
 
     // Method to send a message to a student
-    private void sendMessageToStudent() {
-        if (loginState) {
-            System.out.println("\nSend Message to Student\n-------------------------");
-            System.out.print("Enter Student ID: ");
-            String studentId = scn.next();
-            System.out.print("Enter Message: ");
-            scn.nextLine();  // Consume newline left over from nextInt()
-            String message = scn.nextLine();
 
-            boolean messageSent = dbcd.sendMessageToStudent(studentId, message);
-            if (messageSent) {
-                System.out.println("Message sent successfully.");
-            } else {
-                System.out.println("Error sending message.");
-            }
-            demonstratorDashboard();
-        } else {
-            System.out.println("You must log in first.");
-            login();
-        }
-    }
 
     // Method to send a message to a lecturer
-    private void sendMessageToLecturer() {
+    private void sendMessage() {
+        int type;
+        String user="";
+        boolean msgStt;
         if (loginState) {
-            System.out.println("\nSend Message to Lecturer\n---------------------------");
-            System.out.print("Enter Lecturer ID: ");
-            String lecturerId = scn.next();
-            System.out.print("Enter Message: ");
-            scn.nextLine();  // Consume newline left over from nextInt()
-            String message = scn.nextLine();
-
-            boolean messageSent = dbcd.sendMessageToLecturer(lecturerId, message);
-            if (messageSent) {
-                System.out.println("Message sent successfully.");
-            } else {
-                System.out.println("Error sending message.");
+            System.out.println("\nSend Message to User\n-------------------------");
+            System.out.println("Which one that you want to send a message?");
+            System.out.println("\t01.Student\n\t02.Lecturer\n\t03.Demonstrator");
+            System.out.print("Select the number: ");
+            type= scn.nextInt();
+            switch (type){
+                case 1:user="Student";
+                break;
+                case 2:user="Lecturer";
+                break;
+                case 3:user="Demonstrator";
             }
-            demonstratorDashboard();
+            System.out.print("Enter the "+user+"ID here:");
+            String user_id=scn.next();
+            msgStt= dbc.sendMessage(type,user_id,this.username);
+            if(msgStt){
+                System.out.println("Message ware sent successfully.");
+                demonstratorDashboard();
+            }else{
+                sendMessage();
+            }
         } else {
             System.out.println("You must log in first.");
             login();
