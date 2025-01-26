@@ -130,14 +130,7 @@ public class Admin extends UniversityPerson{
         }
     }
     private void studentRemove(){
-        System.out.println("remove");
-        //=============
-        String[][] fl=dbc.getLecturePositionList();
-        for(String[] x:fl){
-            for(String y:x){
-                System.out.println(y);
-            }
-        }
+        System.out.println("student Can't be removed by yourself.");
         adminDashboard();
     }
 
