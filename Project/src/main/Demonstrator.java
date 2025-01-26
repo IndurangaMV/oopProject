@@ -133,9 +133,5 @@ dbc.setViewStt(username);
             System.out.println("You are already signed out.");
         }
     }
-    public static void main(String[] args) {
-        Demonstrator demo=new Demonstrator();
-        demo.login();
-    }
 }
 

@@ -29,14 +29,16 @@ public class Admin extends UniversityPerson{
     }
     private void adminDashboard(){
         if(loginState){
-            System.out.println("-----------------------------");
-            System.out.println("Admin Dashboard");
-            System.out.println("-----------------------------");
+            System.out.println("----------------------------------------------------------");
+            System.out.println("Admin Dashboard\t\tMedical Requests:"+dbc.medicalNotification());
+            System.out.println("----------------------------------------------------------");
             System.out.println("01.Add new Student.");
             System.out.println("02.Remove Student.");
             System.out.println("03. Add new Demonstrator.");
             System.out.println("04. Add new Lecturer.");
-            System.out.println("05.Sign Out.");
+            System.out.println("05. Send Message.");
+            System.out.println("06. Medical Request.");
+            System.out.println("07.Sign Out.");
             System.out.print("\nPlease enter the task number:");
             int task=scn.nextInt();
             switch (task){
@@ -53,6 +55,12 @@ public class Admin extends UniversityPerson{
                     lecturerRegister();
                     break;
                 case 5:
+                    sendMessage();
+                    break;
+                case 6:
+                    medicalAction();
+                    break;
+                case 7:
                     signOut();
                     break;
                 default:
@@ -61,6 +69,58 @@ public class Admin extends UniversityPerson{
             }
         }else{
             System.out.println("You have to login first.");
+            login();
+        }
+    }
+
+    private void medicalAction(){
+       dbc.getMedicalAction();
+       adminDashboard();
+    }
+
+    private void sendMessage() {
+        int type;
+        String user="";
+        boolean msgStt;
+        if (loginState) {
+            System.out.println("\nSend Message to User\n-------------------------");
+            System.out.println("Which one that you want to send a message?");
+            System.out.println("\t01.Student\n\t02.Lecturer\n\t03.Demonstrator");
+            System.out.print("Select the number: ");
+            type= scn.nextInt();
+            switch (type){
+                case 1:user="Student";
+                    break;
+                case 2:user="Lecturer";
+                    break;
+                case 3:user="Demonstrator";
+            }
+            System.out.print("Enter the "+user+"ID here:");
+            String user_id=scn.next();
+            msgStt= dbc.sendMessage(type,user_id,this.username);
+            if(msgStt){
+                System.out.println("Message ware sent successfully.");
+                adminDashboard();
+            }else{
+                sendMessage();
+            }
+        } else {
+            System.out.println("You must log in first.");
+            login();
+        }
+    }
+    private void sendMessage(String user_id) {
+        boolean msgStt;
+        if (loginState) {
+            msgStt= dbc.sendMessage(1,user_id,this.username);
+            if(msgStt){
+                System.out.println("Message ware sent successfully.");
+                adminDashboard();
+            }else{
+                System.out.println("Message sending failed..! try to inform manually.");
+            }
+        } else {
+            System.out.println("You must log in first.");
             login();
         }
     }
@@ -147,9 +207,3 @@ public class Admin extends UniversityPerson{
     }
 }
 
-class Test{
-    public static void main(String[] args) {
-        Admin ad=new Admin();
-        ad.login();
-    }
-}

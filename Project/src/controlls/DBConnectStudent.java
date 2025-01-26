@@ -1,6 +1,7 @@
 package controlls;
 
 import java.sql.*;
+import java.time.LocalDate;
 
 public class DBConnectStudent extends DBConnect {
     public boolean login(String username, String password) {
@@ -95,6 +96,38 @@ public class DBConnectStudent extends DBConnect {
             System.out.println("Database error: " + e.getMessage());
         }
         return lecList;
+    }
+    public void saveMedical(int id,LocalDate date, String username){
+        int stdId=0;
+        Connection connection=sqlConnector();
+        try{
+            Statement st = connection.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY
+            );
+            ResultSet rs=st.executeQuery("SELECT id FROM student WHERE studentNumber='"+username+"'");
+            rs.next();
+            stdId=rs.getInt("id");
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        try (PreparedStatement ps = connection.prepareStatement("INSERT INTO medical(id,date,status,student_id,admin_id) VALUES(?,?,?,?,?)")) {
+            ps.setInt(1, id);
+            ps.setString(2, String.valueOf(date));
+            ps.setInt(3,0);
+            ps.setInt(4, stdId);
+            ps.setInt(5,1);
+
+            int rowsInserted = ps.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("Medical Request is pending");
+            }else{
+                System.out.println("Medical Request failed. Please try again");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

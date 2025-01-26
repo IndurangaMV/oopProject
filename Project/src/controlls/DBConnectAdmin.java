@@ -85,7 +85,53 @@ public class DBConnectAdmin extends DBConnect {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+    }
+    public void getMedicalAction(){
+        Connection connection=sqlConnector();
+        try{
+            Statement st = connection.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY
+            );
+            ResultSet rs=st.executeQuery("SELECT medical.id AS mid,medical.date,student.id,student.studentNumber FROM medical LEFT JOIN student ON medical.student_id=student.id WHERE status='0' AND admin_id='1'");
+            while (rs.next()){
+                System.out.println("Medical No:"+rs.getInt("mid")+"\tStudent:"+rs.getString("studentNumber")+"\t\tDate:"+rs.getString("date"));
+           }
+            System.out.print("Enter the Medical number:");
+            String mNum= scn.next();
+            System.out.println("Enter Action (Approve-1\tDecline-2):");
+           String action=scn.next();
+            try (PreparedStatement ps = connection.prepareStatement("UPDATE medical SET status=? WHERE id=?")) {
+                ps.setString(1, action);
+                ps.setString(2, mNum);
+                int rowsInserted = ps.executeUpdate();
+                if (rowsInserted > 0) {
+                    System.out.println("Medical Status Updated.");
+                }else{
+                    System.out.println("Process could not be done. Try again");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+    public int medicalNotification(){
+        Connection connection=sqlConnector();
+        int not =0;
+        try{
+            Statement st = connection.createStatement(
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY
+            );
+            ResultSet rs=st.executeQuery("SELECT * FROM medical WHERE status='0' AND admin_id='1'");
+            rs.last();
+            not=rs.getRow();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return not;
     }
 }
 

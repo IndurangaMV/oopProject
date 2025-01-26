@@ -6,6 +6,11 @@ import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
 import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.Random;
+
 
 public class Student extends UniversityPerson {
     private boolean loginState = false;
@@ -140,9 +145,23 @@ public class Student extends UniversityPerson {
     }
     private void requestMedical(){
         if (loginState){
-
+            System.out.println("You can Apply medical withing one week.");
+           System.out.print("Enter date:");
+           String date= scn.next();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate inputDate = LocalDate.parse(date, formatter);
+            LocalDate today = LocalDate.now();
+            LocalDate sevenDaysAgo = today.minusDays(7);
+            boolean isWithinLastSevenDays = (inputDate.isEqual(today) || inputDate.isAfter(sevenDaysAgo)) && inputDate.isBefore(today.plusDays(1));
+            if(isWithinLastSevenDays){
+                Random random = new Random();
+                int uniqueID = 10000 + random.nextInt(90000);
+                dbc.saveMedical(uniqueID,inputDate,username);
+            }else{
+                System.out.println("Invalid date");
+            }
+            studentDashboard();
         }
-
     }
 
 
@@ -159,14 +178,6 @@ public class Student extends UniversityPerson {
         }
 
     }
-
-    public static void main(String[] args) {
-        Student stu = new Student();
-        stu.login();
-        stu.studentDashboard();
-
-    }
-
 }
 
 
