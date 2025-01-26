@@ -111,7 +111,7 @@ public class DBConnectlecturer extends DBConnect{
             System.out.println(e);
         }
     }
-    public String[][] seeLectureShedule(String from,String to,String username){
+    public String[][] seeLectureShedule(Date from,Date to,String username){
         String[][] lecList=null;
         Connection connection=sqlConnector();
         try{

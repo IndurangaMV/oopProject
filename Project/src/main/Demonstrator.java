@@ -1,6 +1,11 @@
 package main;
 import controlls.DBConnectDemonstrator;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.temporal.WeekFields;
+import java.util.Locale;
+
 
 public class Demonstrator extends UniversityPerson {
     private boolean loginState = false;
@@ -25,7 +30,6 @@ public class Demonstrator extends UniversityPerson {
             login();
         }
     }
-
     private void demonstratorDashboard() {
         if (loginState) {
             System.out.println("-----------------------------");
@@ -59,35 +63,22 @@ public class Demonstrator extends UniversityPerson {
             login();
         }
     }
-
-    // Method to mark attendance for students
     private void markAttendance() {
         if (loginState) {
-            System.out.println("\nMarking Attendance\n-------------------");
-            System.out.print("Enter Student ID: ");
-            String studentId = scn.next();
-            System.out.print("Enter Course ID: ");
-            String courseId = scn.next();
-            System.out.print("Enter Date (yyyy-mm-dd): ");
-            String date = scn.next();
-
-            boolean attendanceMarked = dbc.markStudentAttendance(studentId, courseId, date);
-            if (attendanceMarked) {
-                System.out.println("Attendance marked successfully.");
-            } else {
-                System.out.println("Error marking attendance.");
-            }
+            LocalDate currentDate = LocalDate.now();
+            WeekFields weekFields = WeekFields.of(Locale.getDefault());
+            LocalDate dateFrom = currentDate.with(weekFields.dayOfWeek(), 1);
+            LocalDate dateTo = currentDate.with(weekFields.dayOfWeek(), 5);
+            Date sqlDateFrom = Date.valueOf(dateFrom);
+            Date sqlDateTo = Date.valueOf(dateTo);
+            int lecID=dbc.selectDemoLecture(username,sqlDateFrom,sqlDateTo);
+            dbc.markStudentAttendance(lecID);
             demonstratorDashboard();
         } else {
             System.out.println("You must log in first.");
             login();
         }
     }
-
-    // Method to send a message to a student
-
-
-    // Method to send a message to a lecturer
     private void sendMessage() {
         int type;
         String user="";
@@ -131,7 +122,6 @@ public class Demonstrator extends UniversityPerson {
     private void markAsRead(){
 dbc.setViewStt(username);
     }
-
     @Override
     public void signOut() {
         if (loginState) {

@@ -6,6 +6,10 @@ import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
 import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.temporal.WeekFields;
+import java.util.Locale;
+import java.sql.Date;
 
 public class Lecturer extends UniversityPerson {
     private boolean loginState=false;
@@ -76,9 +80,13 @@ public class Lecturer extends UniversityPerson {
     }
     private void getStudentAttendance(){
         if(loginState){
-            String from="2025-01-01"; //add start date of current month
-            String to="2025-01-31";//add end date of current month
-            String[][] lecList= dbc.seeLectureShedule(from,to,username);
+            LocalDate currentDate = LocalDate.now();
+            WeekFields weekFields = WeekFields.of(Locale.getDefault());
+            LocalDate dateFrom = currentDate.with(weekFields.dayOfWeek(), 1);
+            LocalDate dateTo = currentDate.with(weekFields.dayOfWeek(), 5);
+            Date sqlDateFrom = Date.valueOf(dateFrom);
+            Date sqlDateTo = Date.valueOf(dateTo);
+            String[][] lecList= dbc.seeLectureShedule(sqlDateFrom,sqlDateTo,username);
             for(int x=0;x<lecList.length;x++){
                 System.out.println("Index:"+x+"\t"+lecList[x][1]+"\t"+lecList[x][2]+"\t"+lecList[x][3]+"\t"+lecList[x][4]+"\t"+lecList[x][0]);
             }
@@ -100,15 +108,13 @@ public class Lecturer extends UniversityPerson {
     }
     private void AboutLecture(){
         if(loginState){
-            LocalDate currentDate= LocalDate.now();
-            WeekFields weekFields=WeekFields.of(Locale.getDefault());
-            int currentWeek=currentDate.get(weekFields.dayOfWeek());
-            LocalDate dateFrom=currentDate.with(weekFields.dayOfWeek(), 1);
-            LocalDate dateTo=currentDate.with(weekFields.dayOfWeek(), 5);
-
-            String from="2025-01-15";
-            String to="2025-04-10";
-            String[][] lecList= dbc.seeLectureShedule(from,to,username);
+            LocalDate currentDate = LocalDate.now();
+            WeekFields weekFields = WeekFields.of(Locale.getDefault());
+            LocalDate dateFrom = currentDate.with(weekFields.dayOfWeek(), 1);
+            LocalDate dateTo = currentDate.with(weekFields.dayOfWeek(), 5);
+            Date sqlDateFrom = Date.valueOf(dateFrom);
+            Date sqlDateTo = Date.valueOf(dateTo);
+            String[][] lecList= dbc.seeLectureShedule(sqlDateFrom,sqlDateTo,username);
             for(String[] x:lecList){
                 System.out.println(x[0]+"\t"+x[1]+"\t"+x[2]+"\t"+x[3]+"\t"+x[4]);
             }
@@ -121,16 +127,9 @@ public class Lecturer extends UniversityPerson {
     private void SendMessage() {
 
         if(loginState) {
-            LocalDate currentDate= LocalDate.now();
-            WeekFields weekFields=WeekFields.of(Locale.getDefault());
-            int currentWeek=currentDate.get(weekFields.dayOfWeek());
-            LocalDate dateFrom=currentDate.with(weekFields.dayOfWeek(), 1);
-            LocalDate dateTo=currentDate.with(weekFields.dayOfWeek(), 5);
-
-            int type;
-            String demoId;
-            boolean msgstt;
-            if (loginState) {
+                int type;
+                String demoId;
+                boolean msgstt;
                 System.out.println("If you want to send a message to a demonstrator Enter no 3:");
                 type = scn.nextInt();
                 System.out.println("Enter demonstrator ID:");
@@ -145,8 +144,6 @@ public class Lecturer extends UniversityPerson {
                 else {
                     System.out.println("Message send not success!");
                 }
-
-            }
         }
         else {
             System.out.println("You have to login first");
