@@ -26,7 +26,7 @@ CREATE TABLE `academic_year_semester` (
   `id` int NOT NULL AUTO_INCREMENT,
   `academicYear_semester` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -35,8 +35,34 @@ CREATE TABLE `academic_year_semester` (
 
 LOCK TABLES `academic_year_semester` WRITE;
 /*!40000 ALTER TABLE `academic_year_semester` DISABLE KEYS */;
-INSERT INTO `academic_year_semester` VALUES (1,'First Year First Semester');
+INSERT INTO `academic_year_semester` VALUES (1,'First Year First Semester'),(2,'First Year Second Semester'),(3,'Second Year First Semester'),(4,'Second Year Second Semester'),(5,'Third Year First Semester'),(6,'Third Year Second Semester'),(7,'Fourth Year First Semester'),(8,'Fourth Year Second Semester');
 /*!40000 ALTER TABLE `academic_year_semester` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `admin`
+--
+
+DROP TABLE IF EXISTS `admin`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `admin` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) DEFAULT NULL,
+  `password` varchar(50) NOT NULL,
+  `contact_no` varchar(10) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `admin`
+--
+
+LOCK TABLES `admin` WRITE;
+/*!40000 ALTER TABLE `admin` DISABLE KEYS */;
+INSERT INTO `admin` VALUES (1,'induranga','6204210','0789677660');
+/*!40000 ALTER TABLE `admin` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -86,7 +112,7 @@ CREATE TABLE `department` (
   PRIMARY KEY (`id`),
   KEY `fk_department_faculty1_idx` (`faculty_id`),
   CONSTRAINT `fk_department_faculty1` FOREIGN KEY (`faculty_id`) REFERENCES `faculty` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -95,7 +121,7 @@ CREATE TABLE `department` (
 
 LOCK TABLES `department` WRITE;
 /*!40000 ALTER TABLE `department` DISABLE KEYS */;
-INSERT INTO `department` VALUES (1,'Physics and Electronics',1),(2,'Statistics and Computer Science',1);
+INSERT INTO `department` VALUES (1,'Physics and Electronics',1),(2,'Statistics and Computer Science',1),(3,'Mathematics',1);
 /*!40000 ALTER TABLE `department` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -110,7 +136,7 @@ CREATE TABLE `faculty` (
   `id` int NOT NULL AUTO_INCREMENT,
   `faculty_name` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -119,7 +145,7 @@ CREATE TABLE `faculty` (
 
 LOCK TABLES `faculty` WRITE;
 /*!40000 ALTER TABLE `faculty` DISABLE KEYS */;
-INSERT INTO `faculty` VALUES (1,'Faculty of Science');
+INSERT INTO `faculty` VALUES (1,'Faculty of Science'),(2,'Faculty of Medicine'),(3,'Faculty of Management'),(4,'Faculty of Computing & Technology'),(5,'Faculty of Humanities');
 /*!40000 ALTER TABLE `faculty` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -417,4 +443,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-24  0:54:26
+-- Dump completed on 2025-01-10 11:04:36
