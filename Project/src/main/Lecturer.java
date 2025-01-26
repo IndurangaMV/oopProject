@@ -6,9 +6,6 @@ import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
 import java.util.Scanner;
-import java.time.LocalDate;
-import java.time.temporal.WeekFields;
-import java.util.Locale;
 import java.sql.Date;
 
 public class Lecturer extends UniversityPerson {
@@ -75,6 +72,7 @@ public class Lecturer extends UniversityPerson {
         }
         else {
             System.out.println("You have to login first");
+            login();
         }
 
     }
@@ -96,12 +94,12 @@ public class Lecturer extends UniversityPerson {
             for(int n=0;n<studentList.length;n++){
                 System.out.println(studentList[n][0]+"\t"+studentList[n][1]+"\t"+studentList[n][2]);
             }
-
+            LectureDashboard();
         }
         else {
             System.out.println("You have to login first");
+            login();
         }
-        LectureDashboard();
     }
     private void markAsRead(){
         dbc.setViewStt(username);
@@ -116,37 +114,45 @@ public class Lecturer extends UniversityPerson {
             Date sqlDateTo = Date.valueOf(dateTo);
             String[][] lecList= dbc.seeLectureShedule(sqlDateFrom,sqlDateTo,username);
             for(String[] x:lecList){
-                System.out.println(x[0]+"\t"+x[1]+"\t"+x[2]+"\t"+x[3]+"\t"+x[4]);
+                System.out.println(x[1]+"\t\t"+x[2]+"\t\t"+x[3]+"\t\t"+x[4]+"\t\t"+x[0]);
             }
-    }
-        else {
+            LectureDashboard();
+        }else {
             System.out.println("You have to login first");
+            login();
         }
-        LectureDashboard();
     }
     private void SendMessage() {
-
         if(loginState) {
                 int type;
-                String demoId;
+                String user;
                 boolean msgstt;
-                System.out.println("If you want to send a message to a demonstrator Enter no 3:");
-                type = scn.nextInt();
-                System.out.println("Enter demonstrator ID:");
-                demoId = scn.next();
-                System.out.println("Enter the message:");
-                String message=scn.nextLine();
-                msgstt = dbc.sendMessage(type, demoId, this.username);
-                if (msgstt) {
-                    System.out.println("Message send success!");
-                    LectureDashboard();
-                }
-                else {
-                    System.out.println("Message send not success!");
-                }
+            System.out.println("Which one that you want to send a message?");
+            System.out.println("\t01.Student\n\t02.Lecturer\n\t03.Demonstrator");
+            System.out.print("Select the number: ");
+            type= scn.nextInt();
+            System.out.println("Enter demonstrator ID:");
+            user = scn.next();
+            switch (type){
+                case 1:user="Student";
+                    break;
+                case 2:user="Lecturer";
+                    break;
+                case 3:user="Demonstrator";
+            }
+            System.out.print("Enter the "+user+"ID here:");
+            String user_id=scn.next();
+            msgstt= dbc.sendMessage(type,user_id,this.username);
+            if(msgstt){
+                System.out.println("Message ware sent successfully.");
+                LectureDashboard();
+            }else{
+                SendMessage();
+            }
         }
         else {
             System.out.println("You have to login first");
+            login();
         }
     }
     private void viewMessage(){
